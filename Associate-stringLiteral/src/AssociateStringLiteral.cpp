@@ -36,9 +36,6 @@ bool AssociateStringLiteral::runOnModule(Module &M) {
   Module::global_iterator gl, gle; //for global variables
   //could also handle by just iterating through .str - .str.1 - .str.2 ....
 
-  DEBUG(outs() << "AssociateStringLiteral: entering module " << M.getName() << "\n");
-  outs() << "AssociateStringLiteral: entering module " << M.getName() << "\n";
-
   // Iterate over all globals and transform to associate symbol to strings for
   // each module
   for(gl = M.global_begin(), gle = M.global_end(); gl != gle; gl++) {
@@ -60,21 +57,12 @@ bool AssociateStringLiteral::runOnModule(Module &M) {
       newName = root + "_" + gl->getName().str();
       gl->setName(newName);
 
-      DEBUG(outs() << "New anonymous string name: " << newName << "\n";);
-      outs() << "New anonymous string name: " << newName << "\n";
-
       // Also REMOVE unnamed_addr value
       if(gl->hasUnnamedAddr()) {
         gl->setUnnamedAddr(false);
       }
-      DEBUG(errs() << "New: " <<  *gl << "\n");
-      outs() << "New: " <<  *gl << "\n";
       this->numInstrumented++;
     } else {
-      DEBUG(errs() << "> " <<  *gl << "\n");
-      DEBUG(errs() << "Linkage: " <<  gl->getLinkage() << "\n");
-      outs() << "> " <<  *gl << "\n";
-      outs() << "Linkage: " <<  gl->getLinkage() << "\n";
       continue;
     }
   }
@@ -96,7 +84,7 @@ unsigned long long AssociateStringLiteral::getTimestamp()
 
 char AssociateStringLiteral::ID = 0;
 static RegisterPass<AssociateStringLiteral> RPAssociateStringLiteral(
-  "associate-literal",
+  "associate-string-literal",
   "Associate symbol to anonomous string literal",
   false,
   false
