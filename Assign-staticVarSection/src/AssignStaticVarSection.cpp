@@ -34,6 +34,8 @@ bool AssignStaticVarSection::runOnModule(Module &M) {
   Module::iterator it, ite;
   Module::global_iterator gl, gle; // for global variables
 
+  DEBUG(errs() << "AssignStaticVarSection: entering module " << M.getName() << "\n");
+
   // Iterate over all static globals and place them in their own section
   for(gl = M.global_begin(), gle = M.global_end(); gl != gle; gl++) {
     std::string secName = ".";
@@ -47,20 +49,27 @@ bool AssignStaticVarSection::runOnModule(Module &M) {
 
     // InternalLinkage is specifically for STATIC variables
     if(gl->hasInternalLinkage()) {
+      DEBUG(errs() << "\nInternal: " <<  *gl << "\n");
       if(gl->isConstant()) {
         //Belongs in RODATA
         assert(!gl->isThreadLocal() && "TLS data should not be in .rodata");
         secName += "rodata.";
+        DEBUG(errs() << "RO Name: " << secName + gl->getName().str() << "\n");
       }
       else if(gl->getInitializer()->isZeroValue()) {
         //Belongs in BSS
         secName += "bss.";
+        DEBUG(errs() << "Zero Value or No def: " << gl->getValueType() <<"\n");
+        DEBUG(errs() << "BSS Name: " << secName + gl->getName().str() << "\n");
       }
       else {
         //Belongs in DATA
         secName += "data.";
+        DEBUG(errs() << "DATA Name: " << secName + gl->getName().str() << "\n");
       }
     } else {
+      DEBUG(errs() << "> " <<  *gl << "\n");
+      DEBUG(errs() << "Linkage: " <<  gl->getLinkage() << "\n");
       continue;
     }
     gl->setSection(secName + gl->getName().str());
