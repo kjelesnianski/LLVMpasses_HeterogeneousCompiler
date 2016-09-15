@@ -9,7 +9,7 @@ adjust the linkage of somevariables. More specifically, these passes allow for
 the compiler used in the Popcorn Linux project to properly generate aligned
 binarys to be run on the current x86-64/aarch64 heterogeneous setup.
 
-Associate-symbol2Literal pass
+Associate-stringLiteral pass
 -----------------------------
 
 This pass reads over LLVM IR, finds all anonymous string literal (e.g. the
