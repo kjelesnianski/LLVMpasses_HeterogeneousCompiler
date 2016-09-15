@@ -62,17 +62,19 @@ To build each of the passes:
 
 1. Configuration with CMake - make & change into a build directory, then
    configure the installation.
-
+```
     $ mkdir <pass_root>/build && cd <pass_root>/build
+    
     $ cmake -DLLVM_DIR=/where/your/llvm/dir/is/cmake \
-          -DCMAKE_INSTALL_PREFIX=/where/to/put/installed/pass/library \
-          -DCMAKE_CXX_FLAGS="-std=c++11 -O3" \
-          ..
+    -DCMAKE_INSTALL_PREFIX=/where/to/put/installed/pass/library \
+    -DCMAKE_CXX_FLAGS="-std=c++11 -O3" \
+    ..
+```
 
 2. Install the pass
-
+```
     $ make install
-
+```
 [1] Building LLVM with CMake, http://llvm.org/docs/CMake.html
 
 Running the Passes
@@ -81,14 +83,15 @@ Running the Passes
 To run the passes by themselves to see them in action:
 
 1. Compile each src file to bitcode with
-
+```
     $ clang -S -emit-llvm code.c
-
+```
 2. Run the pass with
-
+```
     $ opt -load yourpass.so -yourpass *.ll
 (e.g. $ opt -load Associate-stringLiteral/build/lib/libAssociateStringLiteral.so -associate-literal hellotest.ll )
-
+```
 NOTE: To load and register your pass within clang run the following
-
-    $ clang -Xclang -load -Xclang /path/to/llvmpass.so 
+```
+    $ clang -Xclang -load -Xclang /path/to/llvmpass.so
+```
